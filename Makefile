@@ -10,8 +10,8 @@ CONFIG_FILE  := /etc/doddns.yaml
 SERVICE_FILE := $(SERVICE_DIR)/doddns.service
 PY_SRC       := doddns.py
 
-USR := doddns   # dedicated system user
-GRP := doddns   # and matching group
+USR := doddns
+GRP := doddns
 
 # ---------------------------------------------------------------------
 .PHONY: install uninstall
