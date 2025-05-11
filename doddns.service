@@ -1,0 +1,15 @@
+[Unit]
+Description=DigitalOcean dynamic DNS updater (doddns)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=doddns
+Group=doddns
+ExecStart=/usr/local/bin/doddns
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
