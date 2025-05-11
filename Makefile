@@ -1,16 +1,16 @@
-# doddns Makefile  – install / uninstall
+# doddns Makefile  –  install / uninstall
 
 # ---------------------------------------------------------------------
-# Tunables
-PREFIX      ?= /usr/local      # change if you prefer /usr
-BIN_DIR     := $(PREFIX)/bin
-SERVICE_DIR := /etc/systemd/system
+# Change this if you prefer /usr instead of /usr/local
+PREFIX      ?= /usr/local
 
+BIN_DIR      := $(PREFIX)/bin
+SERVICE_DIR  := /etc/systemd/system
 CONFIG_FILE  := /etc/doddns.yaml
 SERVICE_FILE := $(SERVICE_DIR)/doddns.service
 PY_SRC       := doddns.py
 
-USR := doddns
+USR := doddns      # dedicated service account
 GRP := doddns
 
 # ---------------------------------------------------------------------
@@ -20,12 +20,12 @@ install:
 	@echo "==> Installing doddns"
 	@echo "   (requires: python3 make git python3-requests python3-yaml python3-dnspython)"
 	# 1. system user & group
-	@if ! getent group $(GRP) >/dev/null;  then sudo groupadd --system $(GRP); fi
-	@if ! id -u $(USR) >/dev/null 2>&1;    then \
+	@if ! getent group $(GRP) >/dev/null; then sudo groupadd --system $(GRP); fi
+	@if ! id -u     $(USR) >/dev/null 2>&1; then \
 	    sudo useradd --system --gid $(GRP) --shell /usr/sbin/nologin --home /nonexistent $(USR); fi
 	# 2. executable
 	sudo install -Dm755 $(PY_SRC) $(BIN_DIR)/doddns
-	# 3. default config (only if absent)
+	# 3. default config (only if missing)
 	@if [ ! -f $(CONFIG_FILE) ]; then sudo install -Dm640 doddns.yaml $(CONFIG_FILE); fi
 	sudo chown $(USR):$(GRP) $(CONFIG_FILE)
 	# 4. systemd unit
